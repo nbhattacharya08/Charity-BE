@@ -1,59 +1,51 @@
 const express = require('express');
-const MongoClient = require('mongodb').MongoClient;
+const mongoose = require('mongoose');
 const cors = require('cors');
 
 const app = express();
 app.use(express.json());
 app.use(cors());
 
-const uri = 'mongodb+srv://nilupilu:hellomello@cluster0.tjvd3bk.mongodb.net';
-const client = new MongoClient(uri);
+mongoose.connect('mongodb+srv://nilupilu:hellomello@cluster0.tjvd3bk.mongodb.net/Charity');
+
+const meowSchema = new mongoose.Schema({
+  name: String,
+  donor: String,
+  charity: String,
+  wallet: String
+});
+
+const Register = mongoose.model('Meow', meowSchema);
 
 app.post('/add', (req, res) => {
-    console.log(req.body);
-  
-    console.log("meow")
-    const collection = client.db("Charity").collection("Register");
-    const newReg = {
-      name: req.body.name,
-      donor: req.body.donor,
-      charity: req.body.charity,
-      wallet: req.body.wallet,
-    };
-    collection.insertOne(newReg).then((result) => {
-        console.log(result);
-        res.status(200).send(result);
-    }).catch((err) => {
-        console.log(err);
-        res.status(500).send(err)
-    });
+  const newReg = new Register({
+    name: req.body.name,
+    donor: req.body.donor,
+    charity: req.body.charity,
+    wallet: req.body.wallet
   });
-  app.get("/wallet/:walletid", (req, res) => {
-    const collection = client.db("Charity").collection("Register");
-    console.log(req.params.walletid)
-    collection.findOne({wallet:req.params.walletid}).then((result) => {
-        console.log(result);
-        res.status(200).send(result);
-    }).catch((err) => {
-        res.status(500).send(err)
-    })
-})
-app.get("/get-charity/:name" , (req, res) => {
-    const collection = client.db("Charity").collection("Register");
-    console.log(req.params.name)
-    collection.findOne({name:req.params.name , charity:"charity"}).then((result) => {
-        console.log(result);
-        res.status(200).send(result);
-    }).catch((err) => {
-        res.status(500).send(err)
-    })
-})
 
-
-app.listen(4000, () =>{
-    client.connect().then(() => {
-        console.log('Server is running on port 4000')
-    }).catch((err) => {
-        console.log(err);
-    })
+  newReg.save().then((result) => {
+    res.status(200).send(result);
+  }).catch((err) => {
+    res.status(500).send(err);
+  });
 });
+
+app.get("/wallet/:walletid", (req, res) => {
+  Register.findOne({wallet: req.params.walletid}).then((result) => {
+    res.status(200).send(result);
+  }).catch((err) => {
+    res.status(500).send(err);
+  });
+});
+
+app.get("/get-charity/:name", (req, res) => {
+  Register.findOne({name: req.params.name, charity: "charity"}).then((result) => {
+    res.status(200).send(result);
+  }).catch((err) => {
+    res.status(500).send(err);
+  });
+});
+
+app.listen(4000, () => console.log('Server is running on port 4000'));
