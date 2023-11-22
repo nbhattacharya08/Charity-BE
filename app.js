@@ -7,7 +7,7 @@ app.use(express.json());
 app.use(cors());
 
 const uri = 'mongodb+srv://nilupilu:hellomello@cluster0.tjvd3bk.mongodb.net';
-const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
+const client = new MongoClient(uri);
 
 app.post('/add', (req, res) => {
     console.log(req.body);
