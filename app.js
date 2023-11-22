@@ -6,7 +6,6 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 
-mongoose.connect('mongodb+srv://nilupilu:hellomello@cluster0.tjvd3bk.mongodb.net/Charity');
 
 const meowSchema = new mongoose.Schema({
   name: String,
@@ -48,4 +47,7 @@ app.get("/get-charity/:name", (req, res) => {
   });
 });
 
-app.listen(4000, () => console.log('Server is running on port 4000'));
+app.listen(4000, async () => {
+    await mongoose.connect('mongodb+srv://nilupilu:hellomello@cluster0.tjvd3bk.mongodb.net/Charity');
+    console.log('Listening on port 4000')
+});
