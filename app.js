@@ -53,5 +53,7 @@ app.get("/get-charity/:name" , (req, res) => {
 app.listen(4000, () =>{
     client.connect().then(() => {
         console.log('Server is running on port 4000')
+    }).catch((err) => {
+        console.log(err);
     })
 });
