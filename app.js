@@ -11,7 +11,7 @@ const client = new MongoClient(uri);
 
 app.post('/add', (req, res) => {
     console.log(req.body);
-  client.connect()
+  
     console.log("meow")
     const collection = client.db("Charity").collection("Register");
     const newReg = {
@@ -29,7 +29,6 @@ app.post('/add', (req, res) => {
     });
   });
   app.get("/wallet/:walletid", (req, res) => {
-    client.connect()
     const collection = client.db("Charity").collection("Register");
     console.log(req.params.walletid)
     collection.findOne({wallet:req.params.walletid}).then((result) => {
@@ -40,7 +39,6 @@ app.post('/add', (req, res) => {
     })
 })
 app.get("/get-charity/:name" , (req, res) => {
-    client.connect()
     const collection = client.db("Charity").collection("Register");
     console.log(req.params.name)
     collection.findOne({name:req.params.name , charity:"charity"}).then((result) => {
@@ -52,4 +50,8 @@ app.get("/get-charity/:name" , (req, res) => {
 })
 
 
-app.listen(4000, () => console.log('Server is running on port 4000'));
+app.listen(4000, () =>{
+    client.connect().then(() => {
+        console.log('Server is running on port 4000')
+    })
+});
