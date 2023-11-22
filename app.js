@@ -28,6 +28,17 @@ app.post('/add', (req, res) => {
         res.status(500).send(err)
     });
   });
+  app.get("/wallet/:walletid", (req, res) => {
+    client.connect()
+    const collection = client.db("Charity").collection("Register");
+    console.log(req.params.walletid)
+    collection.findOne({wallet:req.params.walletid}).then((result) => {
+        console.log(result);
+        res.status(200).send(result);
+    }).catch((err) => {
+        res.status(500).send(err)
+    })
+})
 app.get("/get-charity/:name" , (req, res) => {
     client.connect()
     const collection = client.db("Charity").collection("Register");
